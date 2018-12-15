@@ -18,7 +18,7 @@ pub fn solve(constraints: Vec<Constraint>, errors: &mut Vec<TypeError>) -> Subst
 
   let mut type_path: Vec<TypeLoc> = Vec::with_capacity(8);
   for Constraint(left, right, location) in constraints {
-    let mut u = Unifier {
+    let u = Unifier {
       errors: errors,
       subst: &mut subst,
       path: &mut type_path,
