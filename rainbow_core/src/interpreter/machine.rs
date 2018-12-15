@@ -1,6 +1,6 @@
-use interpreter::{Block, Instruction, Value};
-use primitive::Prim;
-use namespace::Namespace;
+use crate::interpreter::{Block, Instruction, Value};
+use crate::primitive::Prim;
+use crate::namespace::Namespace;
 
 pub struct Machine<'a, V: Value + 'a> {
   ns: &'a Namespace<V>,
@@ -100,7 +100,7 @@ impl<'a, V: Value + 'a> Machine<'a, V> {
   }
 
   fn step(&mut self) -> Result<(), V::Error> {
-    use interpreter::Instruction::*;
+    use crate::interpreter::Instruction::*;
 
     match self.instructions[self.instruction_pointer] {
       PushPrimitive { id } => self
@@ -123,7 +123,7 @@ impl<'a, V: Value + 'a> Machine<'a, V> {
         self.value_stack.push(value);
       }
       PushProp { id } => {
-        use interpreter::Record;
+        use crate::interpreter::Record;
         let record = self
           .value_stack
           .pop()
@@ -166,7 +166,7 @@ impl<'a, V: Value + 'a> Machine<'a, V> {
         self.bindings.push((id, value));
       }
       CallFunction { argc } => {
-        use apply::Apply;
+        use crate::apply::Apply;
         let apply = Apply::from(self.pop_pairs(argc)?);
         let value = {
           let func_id = apply.func_id().clone();

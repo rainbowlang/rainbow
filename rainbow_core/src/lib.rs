@@ -28,12 +28,12 @@ pub mod test_helpers;
 mod prelude;
 pub mod standalone;
 
-pub use primitive::Prim;
-pub use scope::Scope;
-pub use with_error::WithError;
-pub use apply::Apply;
-pub use namespace::{INamespace, Namespace, SharedNamespace};
+pub use crate::primitive::Prim;
+pub use crate::scope::Scope;
+pub use crate::with_error::WithError;
+pub use crate::apply::Apply;
+pub use crate::namespace::{INamespace, Namespace, SharedNamespace};
 
-pub use typing::*;
+pub use crate::typing::*;
 
-pub use interpreter::*;
+pub use crate::interpreter::*;

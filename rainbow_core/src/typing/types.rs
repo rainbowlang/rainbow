@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
-use interpreter::Value;
+use crate::interpreter::Value;
 
 use super::substitution::*;
 
@@ -85,8 +85,8 @@ impl Type {
     }
 
     fn satisfied_by_inner<V: Value>(&self, value: &V, errors: &mut Vec<V::Error>, prefix: String) {
-        use Type::*;
-        use interpreter::Record;
+        use crate::Type::*;
+        use crate::interpreter::Record;
         match *self {
             Any => {}
             Never => errors.push(V::Error::from(format!("{}unexpected value", prefix))),
@@ -322,8 +322,8 @@ macro_rules! record_type {
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use typing::types::*;
-    use standalone::Value;
+    use crate::typing::types::*;
+    use crate::standalone::Value;
 
     #[test]
     fn record_display() {

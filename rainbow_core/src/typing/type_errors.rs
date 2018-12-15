@@ -1,5 +1,5 @@
 use super::types::Type;
-use frontend::NodeData;
+use crate::frontend::NodeData;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TypeError {

@@ -1,6 +1,6 @@
-use namespace::Namespace;
-use typing::Type;
-use interpreter::Value;
+use crate::namespace::Namespace;
+use crate::typing::Type;
+use crate::interpreter::Value;
 
 pub fn install<V: Value>(ns: &mut Namespace<V>) -> Result<(), String> {
     ns.define(|f| {
@@ -96,11 +96,11 @@ pub fn install<V: Value>(ns: &mut Namespace<V>) -> Result<(), String> {
     })?;
 
     ns.define(|f| {
-        let try = f.required_arg("try", Type::quoted(Type::var("A")));
+        let r#try = f.required_arg("try", Type::quoted(Type::var("A")));
         let or = f.required_arg("or", Type::quoted(Type::var("A")));
         f.returns(Type::var("A"));
         f.callback(move |args, vm| {
-            args.demand(&try)?
+            args.demand(&r#try)?
                 .try_call(vm, vec![])
                 .or_else(|_suppressed_error| args.demand(&or)?.try_call(vm, vec![]))
         });

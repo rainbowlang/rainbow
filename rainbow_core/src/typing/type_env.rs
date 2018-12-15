@@ -3,7 +3,7 @@ use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 
 use std::iter::FromIterator;
-use scope::Scope;
+use crate::scope::Scope;
 use super::substitution::*;
 use super::types::Type;
 

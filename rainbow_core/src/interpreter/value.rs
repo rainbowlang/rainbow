@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 use std::iter::FromIterator;
-use with_error::WithError;
+use crate::with_error::WithError;
 
 use super::{Block, Machine};
 

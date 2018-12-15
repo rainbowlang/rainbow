@@ -4,11 +4,11 @@ use std::cell::RefCell;
 use std::fmt::{Debug, Formatter, Result as FmtResult};
 use std::collections::HashMap;
 
-use arena::*;
-use function_builder::FunctionBuilder;
-use interpreter::{Machine, Value};
-use apply::Apply;
-use signature::Signature;
+use crate::arena::*;
+use crate::function_builder::FunctionBuilder;
+use crate::interpreter::{Machine, Value};
+use crate::apply::Apply;
+use crate::signature::Signature;
 
 pub type SharedNamespace<V> = Rc<RefCell<Namespace<V>>>;
 
@@ -66,7 +66,7 @@ impl<V: Value> INamespace for Namespace<V> {
 
 impl<V: Value> Namespace<V> {
     pub fn new_with_prelude() -> Result<Self, String> {
-        use prelude;
+        use crate::prelude;
         let mut ns = Self::new_empty();
         prelude::install(&mut ns)?;
         Ok(ns)

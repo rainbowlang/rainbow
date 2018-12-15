@@ -1,8 +1,8 @@
 use std::hash::Hash;
 use std::fmt::{Display, Error as FmtError, Formatter};
-use arena::ArenaId;
+use crate::arena::ArenaId;
 
-use typing::Type;
+use crate::typing::Type;
 
 /// Signature defines the types of inputs/outputs to a function.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

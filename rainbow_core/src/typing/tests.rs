@@ -1,10 +1,10 @@
 #[cfg(test)]
 use std::iter::empty;
 
-use typing;
-use typing::Type;
+use crate::typing;
+use crate::typing::Type;
 
-use test_helpers::*;
+use crate::test_helpers::*;
 
 fn type_of<G: IntoIterator<Item = (String, Type)>>(
   expr: &str,

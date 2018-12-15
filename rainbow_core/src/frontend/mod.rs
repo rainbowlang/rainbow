@@ -11,7 +11,7 @@ pub use self::grammar::*;
 pub use self::syntax_tree::*;
 pub use id_tree::NodeId;
 
-use namespace::INamespace;
+use crate::namespace::INamespace;
 
 pub fn parse<'i, NS: INamespace>(
   namespace: &NS,

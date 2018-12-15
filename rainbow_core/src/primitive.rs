@@ -1,5 +1,5 @@
 use std::fmt::{Display, Error as FmtError, Formatter};
-use typing::Type;
+use crate::typing::Type;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum Prim {

@@ -1,5 +1,5 @@
 use id_tree::{NodeId, NodeIdError};
-use frontend::SyntaxTree;
+use crate::frontend::SyntaxTree;
 use super::Instruction;
 
 pub fn emit<'i>(tree: &'i SyntaxTree<'i>) -> Result<Vec<Instruction>, NodeIdError> {
@@ -26,7 +26,7 @@ impl<'t> Emitter<'t> {
   }
 
   fn recur(&mut self, node_id: &NodeId) -> Result<(), NodeIdError> {
-    use frontend::NodeType::*;
+    use crate::frontend::NodeType::*;
     use super::Instruction::*;
     let node = self.tree.nodes.get(node_id)?;
     let data = node.data();
@@ -118,8 +118,8 @@ impl<'t> Emitter<'t> {
 #[cfg(test)]
 mod tests {
   use super::emit;
-  use test_helpers::*;
-  use interpreter::Instruction::*;
+  use crate::test_helpers::*;
+  use crate::interpreter::Instruction::*;
 
   #[test]
   fn test_emit_var() {
@@ -158,7 +158,7 @@ mod tests {
 
   #[test]
   fn test_emit_record() {
-    use test_helpers::*;
+    use crate::test_helpers::*;
     let tree = parse_with_prelude("[ x = 3 y = \"hello\" ]");
     let instructions = emit(&tree).unwrap();
     let x_id = tree.symbols.find(&"x").unwrap();
@@ -177,7 +177,7 @@ mod tests {
 
   #[test]
   fn test_emit_block() {
-    use test_helpers::*;
+    use crate::test_helpers::*;
     let tree = parse_with_prelude("{ x y => [y x] }");
     let instructions = emit(&tree).unwrap();
     let x_id = tree.symbols.find(&"x").unwrap();
@@ -197,7 +197,7 @@ mod tests {
 
   #[test]
   fn test_emit_function_call() {
-    use test_helpers::*;
+    use crate::test_helpers::*;
     let tree = parse_with_prelude("calc: 2 plus: 2");
     let instructions = emit(&tree).unwrap();
     let calc_id = tree.symbols.find(&"calc").unwrap();

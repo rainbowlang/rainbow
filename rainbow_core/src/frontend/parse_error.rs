@@ -1,7 +1,7 @@
 use std::fmt;
 use pest::Error as PestError;
 use id_tree::NodeIdError;
-use frontend::grammar::Rule;
+use crate::frontend::grammar::Rule;
 
 #[derive(Debug)]
 pub enum ParseError<'i> {

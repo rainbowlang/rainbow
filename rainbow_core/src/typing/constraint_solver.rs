@@ -5,7 +5,7 @@ use super::substitution::{Subst, Substitutable};
 use super::types::*;
 use super::type_errors::*;
 
-use frontend::NodeData;
+use crate::frontend::NodeData;
 
 pub fn solve(constraints: Vec<Constraint>, errors: &mut Vec<TypeError>) -> Subst {
   let mut subst = HashMap::new();
@@ -71,7 +71,7 @@ impl<'p, 'c, 'e> Unifier<'p, 'c, 'e> {
   }
 
   fn unify(mut self) -> Type {
-    use Type::*;
+    use crate::Type::*;
     let left = self.left.apply_substitution(self.subst);
     let right = self.right.apply_substitution(self.subst);
 
@@ -169,7 +169,7 @@ impl<'p, 'c, 'e> Unifier<'p, 'c, 'e> {
   }
 
   fn bind(&mut self, var_name: String, ty: Type) -> Type {
-    use ConstraintProblem::*;
+    use crate::ConstraintProblem::*;
 
     if ty.contains_var(&var_name) {
       self.add_problem(InfiniteType(var_name.clone(), ty.clone()));
@@ -198,7 +198,7 @@ impl<'p, 'c, 'e> Unifier<'p, 'c, 'e> {
   }
 
   fn rebind(&mut self, new_type: Type) -> Type {
-    use ConstraintProblem::*;
+    use crate::ConstraintProblem::*;
     for maybe_var in &[self.left, self.right] {
       if let Some(var_name) = maybe_var.var_name() {
         if new_type.contains_var(var_name) {

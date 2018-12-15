@@ -99,8 +99,8 @@ pub use self::type_errors::*;
 
 use std::collections::HashMap;
 
-use frontend::SyntaxTree;
-use namespace::INamespace;
+use crate::frontend::SyntaxTree;
+use crate::namespace::INamespace;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TypeCheckerResult {

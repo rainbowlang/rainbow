@@ -2,10 +2,10 @@ use std::iter::FromIterator;
 use std::collections::HashMap;
 use std::fmt::{Display, Error as FmtError, Formatter};
 
-use typing::Type;
-use with_error::WithError;
-use primitive::Prim;
-use interpreter::{Block, List as IList, Record as IRecord, Value as IValue};
+use crate::typing::Type;
+use crate::with_error::WithError;
+use crate::primitive::Prim;
+use crate::interpreter::{Block, List as IList, Record as IRecord, Value as IValue};
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum Value {
@@ -17,7 +17,7 @@ pub enum Value {
 
 impl Value {
   pub fn type_of(&self) -> Type {
-    use primitive::Prim;
+    use crate::primitive::Prim;
     match *self {
       Value::Prim(Prim::Number(_)) => Type::Num,
       Value::Prim(Prim::String(_)) => Type::Str,

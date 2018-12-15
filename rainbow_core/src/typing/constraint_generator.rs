@@ -1,7 +1,7 @@
-use namespace::INamespace;
+use crate::namespace::INamespace;
 use std::collections::HashMap;
 
-use frontend::{NodeData, SyntaxTree};
+use crate::frontend::{NodeData, SyntaxTree};
 use id_tree::NodeId;
 
 use super::type_errors::*;
@@ -63,7 +63,7 @@ impl<'a, 'i, NS: INamespace> ConstraintGenerator<'a, 'i, NS> {
 
   fn recur(&mut self, type_env: &mut TypeEnv, node_id: &NodeId) -> Type /* Result<Type, NodeIdError> */
   {
-    use frontend::NodeType::*;
+    use crate::frontend::NodeType::*;
     let node = self.tree.nodes.get(node_id).unwrap();
     let data = node.data();
     dbg!("infer {:?}", node.data());

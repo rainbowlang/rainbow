@@ -1,7 +1,7 @@
-use frontend;
-use standalone::Value;
-use namespace::Namespace;
-use interpreter;
+use crate::frontend;
+use crate::standalone::Value;
+use crate::namespace::Namespace;
+use crate::interpreter;
 
 pub fn init_namespace() -> Namespace<Value> {
   Namespace::new_with_prelude().unwrap()

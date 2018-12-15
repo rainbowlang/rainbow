@@ -1,9 +1,9 @@
-use arena::*;
-use signature::{Argument, Signature};
-use interpreter::{Machine, Value};
-use apply::Apply;
-use typing::Type;
-use arena::ArenaId;
+use crate::arena::*;
+use crate::signature::{Argument, Signature};
+use crate::interpreter::{Machine, Value};
+use crate::apply::Apply;
+use crate::typing::Type;
+use crate::arena::ArenaId;
 
 pub struct FunctionBuilder<'a, V: Value> {
   symbols: &'a mut Arena<String>,

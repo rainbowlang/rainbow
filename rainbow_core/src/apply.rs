@@ -1,5 +1,5 @@
 use std::fmt::Debug;
-use with_error::WithError;
+use crate::with_error::WithError;
 
 
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]

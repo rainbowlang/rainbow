@@ -3,9 +3,9 @@ use std::fmt;
 use pest::iterators::Pair;
 use id_tree::{InsertBehavior, Node, NodeId, NodeIdError, PreOrderTraversal, Tree, TreeBuilder};
 
-use primitive::Prim;
-use arena::*;
-use frontend::grammar::Rule;
+use crate::primitive::Prim;
+use crate::arena::*;
+use crate::frontend::grammar::Rule;
 
 pub struct SyntaxTree<'i> {
   pub input: &'i str,
@@ -83,7 +83,7 @@ impl<'i> SyntaxTree<'i> {
 
   #[inline]
   pub fn node_id_to_symbol_id(&self, id: &NodeId) -> Result<ArenaId, NodeIdError> {
-    use frontend::NodeType::{Ident, Keyword};
+    use crate::frontend::NodeType::{Ident, Keyword};
     let data = self.node_data(id)?;
     if let Ident(id) = data.node_type {
       Ok(id)
@@ -258,7 +258,7 @@ impl<'a> fmt::Display for SyntaxTree<'a> {
 
 #[test]
 fn test_print_tree() {
-  use test_helpers::*;
+  use crate::test_helpers::*;
   let tree = parse_with_prelude(
     "each: offices
      do: { office => [

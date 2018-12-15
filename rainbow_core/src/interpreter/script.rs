@@ -1,10 +1,10 @@
 use std::collections;
 use std::fmt;
 
-use namespace;
-use frontend; //::{parse, NodeData, ParseError, SyntaxTree};
-use typing; //::{type_of, Type, TypeError};
-use interpreter::{emitter, Instruction, Value};
+use crate::namespace;
+use crate::frontend; //::{parse, NodeData, ParseError, SyntaxTree};
+use crate::typing; //::{type_of, Type, TypeError};
+use crate::interpreter::{emitter, Instruction, Value};
 use pest;
 use id_tree;
 
@@ -33,7 +33,7 @@ pub enum CompileError<'i> {
 
 impl<'i> From<frontend::ParseError<'i>> for CompileError<'i> {
   fn from(err: frontend::ParseError<'i>) -> Self {
-    use frontend::ParseError::*;
+    use crate::frontend::ParseError::*;
     match err {
       NodeId(err) => CompileError::NodeIdError(Stage::Parse, err),
       Pest(err) => CompileError::ParseError(err),
@@ -43,7 +43,7 @@ impl<'i> From<frontend::ParseError<'i>> for CompileError<'i> {
 
 impl<'i> fmt::Display for CompileError<'i> {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    use CompileError::*;
+    use crate::CompileError::*;
     match *self {
       NodeIdError(stage, ref _err) => write!(f, "Internal compiler error stage={:?}", stage),
       ParseError(ref err) => write!(f, "{}", err),
@@ -72,7 +72,7 @@ impl<'i, V: Value> Script<'i, V> {
   }
 
   pub fn eval(&self, inputs: collections::HashMap<String, V>) -> Result<V, V::Error> {
-    use interpreter::machine::Machine;
+    use crate::interpreter::machine::Machine;
     // use interpreter::interpreter::*;
     let bindings: Vec<_> = inputs
       .into_iter()
@@ -97,8 +97,8 @@ impl<'i, V: Value> Script<'i, V> {
 mod tests {
   use std::collections::HashMap;
   use std::iter::FromIterator;
-  use test_helpers::*;
-  use standalone::Value;
+  use crate::test_helpers::*;
+  use crate::standalone::Value;
   use super::Script;
 
   #[test]

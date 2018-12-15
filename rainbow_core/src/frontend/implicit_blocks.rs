@@ -1,8 +1,8 @@
 use id_tree::{InsertBehavior, Node, NodeIdError, RemoveBehavior, SwapBehavior};
 
-use typing::Type;
-use namespace::INamespace;
-use frontend::{NodeData, NodeType, SyntaxTree};
+use crate::typing::Type;
+use crate::namespace::INamespace;
+use crate::frontend::{NodeData, NodeType, SyntaxTree};
 
 /// Rewrite a syntax tree, adding & removing implicit blocks.
 pub fn rewrite<NS: INamespace>(ns: &NS, tree: &mut SyntaxTree) -> Result<(), NodeIdError> {
@@ -98,7 +98,7 @@ pub fn rewrite<NS: INamespace>(ns: &NS, tree: &mut SyntaxTree) -> Result<(), Nod
 
 #[cfg(test)]
 mod tests {
-  use test_helpers::*;
+  use crate::test_helpers::*;
 
   #[test]
   fn test_implicit_block_wrapping() {
