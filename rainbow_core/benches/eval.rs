@@ -52,10 +52,10 @@ eval_benchmark!(
 );
 
 benchmark_group!(
-  benches,
-  identity_iteration,
-  math_with_literals,
-  math_with_vars,
-  nested_iteration
+    benches,
+    identity_iteration,
+    math_with_literals,
+    math_with_vars,
+    nested_iteration
 );
 benchmark_main!(benches);

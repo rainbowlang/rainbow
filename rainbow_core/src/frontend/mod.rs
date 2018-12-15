@@ -1,48 +1,46 @@
+mod grammar;
+mod implicit_blocks;
 mod lexer;
 mod parse_error;
-mod grammar;
 mod syntax_tree;
-mod implicit_blocks;
 
 use pest;
 
-pub use self::parse_error::*;
 pub use self::grammar::*;
+pub use self::parse_error::*;
 pub use self::syntax_tree::*;
 pub use id_tree::NodeId;
 
 use crate::namespace::INamespace;
 
 pub fn parse<'i, NS: INamespace>(
-  namespace: &NS,
-  rule: Rule,
-  input: &'i str,
+    namespace: &NS,
+    rule: Rule,
+    input: &'i str,
 ) -> Result<SyntaxTree<'i>, ParseError<'i>> {
-  use pest::Parser;
+    use pest::Parser;
 
-  let mut pairs = RainbowGrammar::parse(rule, input)?;
+    let mut pairs = RainbowGrammar::parse(rule, input)?;
 
-  if let Some(pair) = pairs.next() {
-    if pair.as_str().len() != input.len() {
-      Err(
-        pest::Error::CustomErrorPos {
-          message: "extra input".into(),
-          pos: pair.into_span().end_pos(),
-        }.into(),
-      )
+    if let Some(pair) = pairs.next() {
+        if pair.as_str().len() != input.len() {
+            Err(pest::Error::CustomErrorPos {
+                message: "extra input".into(),
+                pos: pair.into_span().end_pos(),
+            }
+            .into())
+        } else {
+            let mut tree = SyntaxTree::from_input_and_pair(namespace.symbols(), input, pair)?;
+            implicit_blocks::rewrite(namespace, &mut tree)?;
+            Ok(tree)
+        }
     } else {
-      let mut tree = SyntaxTree::from_input_and_pair(namespace.symbols(), input, pair)?;
-      implicit_blocks::rewrite(namespace, &mut tree)?;
-      Ok(tree)
+        Err(pest::Error::CustomErrorPos {
+            message: "no input".into(),
+            pos: pest::Position::from_start(input).at_start().unwrap(),
+        }
+        .into())
     }
-  } else {
-    Err(
-      pest::Error::CustomErrorPos {
-        message: "no input".into(),
-        pos: pest::Position::from_start(input).at_start().unwrap(),
-      }.into(),
-    )
-  }
 }
 
 /*

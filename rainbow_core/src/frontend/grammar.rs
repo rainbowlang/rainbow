@@ -25,7 +25,8 @@ mod tests {
                     String::from(input),
                     String::from(input),
                     String::from(input),
-                ].join(sep);
+                ]
+                .join(sep);
 
                 parses_to! {
                     parser: RainbowGrammar,

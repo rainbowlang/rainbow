@@ -1,10 +1,9 @@
-use std::collections::{HashMap, HashSet};
-use std::cmp::Ordering;
-use std::fmt::{Display, Formatter};
 use crate::interpreter::Value;
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
+use std::fmt::{Display, Formatter};
 
 use super::substitution::*;
-
 
 #[derive(Debug, PartialEq, Eq, Clone, Serialize, Deserialize)]
 pub enum Type {
@@ -85,8 +84,8 @@ impl Type {
     }
 
     fn satisfied_by_inner<V: Value>(&self, value: &V, errors: &mut Vec<V::Error>, prefix: String) {
-        use crate::Type::*;
         use crate::interpreter::Record;
+        use crate::Type::*;
         match *self {
             Any => {}
             Never => errors.push(V::Error::from(format!("{}unexpected value", prefix))),
@@ -115,36 +114,42 @@ impl Type {
                 errors.push(V::Error::from("money type is not ready yet".to_string()));
             }
             List(ref t) => match value.try_list() {
-                Ok(list) => for (i, item) in list.into_iter().enumerate() {
-                    t.satisfied_by_inner(&item, errors, format!("{}item {}: ", prefix, i));
-                },
+                Ok(list) => {
+                    for (i, item) in list.into_iter().enumerate() {
+                        t.satisfied_by_inner(&item, errors, format!("{}item {}: ", prefix, i));
+                    }
+                }
                 Err(err) => {
                     errors.push(err);
                 }
             },
             Record(_partial, ref fields) => match value.try_record() {
-                Ok(record) => for (name, field) in fields {
-                    match (record.at(name), field.optional) {
-                        (Some(ref val), _) => {
-                            field.ty.satisfied_by_inner(
-                                val,
-                                errors,
-                                format!("{}field `{}` ", prefix, name),
-                            );
+                Ok(record) => {
+                    for (name, field) in fields {
+                        match (record.at(name), field.optional) {
+                            (Some(ref val), _) => {
+                                field.ty.satisfied_by_inner(
+                                    val,
+                                    errors,
+                                    format!("{}field `{}` ", prefix, name),
+                                );
+                            }
+                            (None, false) => {
+                                errors.push(V::Error::from(format!("field `{}` is required", name)))
+                            }
+                            (None, true) => (),
                         }
-                        (None, false) => {
-                            errors.push(V::Error::from(format!("field `{}` is required", name)))
-                        }
-                        (None, true) => (),
                     }
-                },
+                }
                 Err(err) => {
                     errors.push(err);
                 }
             },
-            Block(_, _) => if !value.callable() {
-                errors.push(V::Error::from("not a block".to_string()))
-            },
+            Block(_, _) => {
+                if !value.callable() {
+                    errors.push(V::Error::from("not a block".to_string()))
+                }
+            }
         }
     }
 }
@@ -206,7 +211,6 @@ impl Substitutable for Type {
         }
     }
 }
-
 
 impl Display for Type {
     fn fmt(&self, f: &mut Formatter) -> Result<(), ::std::fmt::Error> {
@@ -321,9 +325,9 @@ macro_rules! record_type {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
-    use crate::typing::types::*;
     use crate::standalone::Value;
+    use crate::typing::types::*;
+    use std::collections::HashMap;
 
     #[test]
     fn record_display() {

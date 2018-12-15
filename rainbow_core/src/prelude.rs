@@ -1,6 +1,6 @@
+use crate::interpreter::Value;
 use crate::namespace::Namespace;
 use crate::typing::Type;
-use crate::interpreter::Value;
 
 pub fn install<V: Value>(ns: &mut Namespace<V>) -> Result<(), String> {
     ns.define(|f| {
@@ -88,7 +88,8 @@ pub fn install<V: Value>(ns: &mut Namespace<V>) -> Result<(), String> {
         f.callback(move |args, vm| {
             let list = args.demand(&each)?.try_list()?;
             let block = args.demand(&do_)?.try_block()?;
-            let out: Result<Vec<V>, V::Error> = list.into_iter()
+            let out: Result<Vec<V>, V::Error> = list
+                .into_iter()
                 .map(|item| vm.eval_block(block, vec![item]))
                 .collect();
             out.map(|vec| vec.into())
@@ -126,7 +127,8 @@ pub fn install<V: Value>(ns: &mut Namespace<V>) -> Result<(), String> {
         f.returns(Type::list_of(Type::Num));
         f.callback(move |args, _vm| {
             let start = args.demand(&count_f)?.try_number()?;
-            let mut step = args.demand(&by)
+            let mut step = args
+                .demand(&by)
                 .and_then(|v| v.try_number())
                 .unwrap_or(1_f64);
             let end = args.demand(&to)?.try_number()?;

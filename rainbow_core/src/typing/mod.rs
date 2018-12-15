@@ -84,18 +84,18 @@
 //! ```
 //!
 //!
-pub mod types;
-mod type_errors;
-mod substitution;
-mod type_env;
 mod constraint_generator;
 mod constraint_solver;
+mod substitution;
+mod type_env;
+mod type_errors;
+pub mod types;
 
 #[cfg(test)]
 mod tests;
 
-pub use self::types::*;
 pub use self::type_errors::*;
+pub use self::types::*;
 
 use std::collections::HashMap;
 
@@ -104,51 +104,51 @@ use crate::namespace::INamespace;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TypeCheckerResult {
-  pub inputs: HashMap<String, Type>,
-  pub output: Type,
-  pub errors: Vec<TypeError>,
+    pub inputs: HashMap<String, Type>,
+    pub output: Type,
+    pub errors: Vec<TypeError>,
 }
 
 impl TypeCheckerResult {
-  pub fn unwrap(self) -> (Type, HashMap<String, Type>) {
-    if self.errors.is_empty() {
-      return (self.output, self.inputs);
+    pub fn unwrap(self) -> (Type, HashMap<String, Type>) {
+        if self.errors.is_empty() {
+            return (self.output, self.inputs);
+        }
+        panic!("Unwrap called on {:?}", self)
     }
-    panic!("Unwrap called on {:?}", self)
-  }
 }
 
 /// Determine the type of an expression given a `Namespace` and iterator of global variable types.
 pub fn type_of<NS, G>(ns: &NS, globals: G, tree: &SyntaxTree) -> TypeCheckerResult
 where
-  NS: INamespace,
-  G: IntoIterator<Item = (String, Type)>,
+    NS: INamespace,
+    G: IntoIterator<Item = (String, Type)>,
 {
-  use self::type_env::TypeEnv;
-  use self::constraint_generator::generate;
-  use self::constraint_solver::solve;
-  use self::substitution::Substitutable;
+    use self::constraint_generator::generate;
+    use self::constraint_solver::solve;
+    use self::substitution::Substitutable;
+    use self::type_env::TypeEnv;
 
-  let mut initial_env: TypeEnv = globals.into_iter().collect();
-  let (inferred_type, constraints, mut errors) = generate(ns, &mut initial_env, tree);
+    let mut initial_env: TypeEnv = globals.into_iter().collect();
+    let (inferred_type, constraints, mut errors) = generate(ns, &mut initial_env, tree);
 
-  #[cfg(test)]
-  {
-    use self::constraint_generator::Constraint;
-    dbg!("constraints:");
-    for &Constraint(ref lft, ref rgt, _) in constraints.iter() {
-      dbg!("  {} ~ {}", lft, rgt);
+    #[cfg(test)]
+    {
+        use self::constraint_generator::Constraint;
+        dbg!("constraints:");
+        for &Constraint(ref lft, ref rgt, _) in constraints.iter() {
+            dbg!("  {} ~ {}", lft, rgt);
+        }
     }
-  }
 
-  let subst = solve(constraints, &mut errors);
+    let subst = solve(constraints, &mut errors);
 
-  let mut inferred_globals: HashMap<_, Type> = initial_env.apply_substitution(&subst).into();
-  inferred_globals.retain(|k, _v| initial_env.contains_key(k));
+    let mut inferred_globals: HashMap<_, Type> = initial_env.apply_substitution(&subst).into();
+    inferred_globals.retain(|k, _v| initial_env.contains_key(k));
 
-  TypeCheckerResult {
-    inputs: inferred_globals,
-    output: inferred_type.apply_substitution(&subst),
-    errors: errors,
-  }
+    TypeCheckerResult {
+        inputs: inferred_globals,
+        output: inferred_type.apply_substitution(&subst),
+        errors: errors,
+    }
 }

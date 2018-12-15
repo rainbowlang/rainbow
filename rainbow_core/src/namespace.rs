@@ -1,13 +1,13 @@
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
-use std::fmt::{Debug, Formatter, Result as FmtResult};
 use std::collections::HashMap;
+use std::fmt::{Debug, Formatter, Result as FmtResult};
 
+use crate::apply::Apply;
 use crate::arena::*;
 use crate::function_builder::FunctionBuilder;
 use crate::interpreter::{Machine, Value};
-use crate::apply::Apply;
 use crate::signature::Signature;
 
 pub type SharedNamespace<V> = Rc<RefCell<Namespace<V>>>;

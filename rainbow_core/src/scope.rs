@@ -1,9 +1,9 @@
-use std::collections::hash_map::HashMap;
-use std::iter::FromIterator;
-use std::hash::Hash;
-use std::rc::Rc;
-use std::fmt::Debug;
 use std::cell::RefCell;
+use std::collections::hash_map::HashMap;
+use std::fmt::Debug;
+use std::hash::Hash;
+use std::iter::FromIterator;
+use std::rc::Rc;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Scope<V, K: Hash + Eq = String>(FramePtr<V, K>);
@@ -115,7 +115,8 @@ where
             None => None,
             Some(ref parent_frame_ptr) => Some((*parent_frame_ptr).borrow().map_clone(f).clone()),
         };
-        let locals: Locals<V2, K> = self.locals
+        let locals: Locals<V2, K> = self
+            .locals
             .iter()
             .map(|(ref k, ref v)| {
                 ((*k).clone(), Rc::new(/* */ f(v.as_ref()) /* */))
