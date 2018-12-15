@@ -1,2 +1,2 @@
 [workspace]
-members = ["rainbow_core"]
+members = ["rainbow_core", "rainbow_repl"]
