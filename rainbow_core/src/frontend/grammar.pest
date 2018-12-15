@@ -1,0 +1,41 @@
+script = { term ~ term* }
+
+term = _{ (apply | value | block) }
+
+apply = { argument+ }
+
+argument = { keyword ~ term }
+
+value = _{ bool | variable | record | list | string | number }
+
+variable = { ident ~ ("." ~ ident)* }
+
+block = { "{" ~ block_args? ~ term ~ "}" }
+block_args = { (ident ~ whitespace*)+ ~ "=>" }
+
+record = { "[" ~ entry ~ (entry)* ~ "]" | "[" ~ "=" ~ "]" }
+
+entry  = { ident ~ "=" ~ term }
+
+list = { "[" ~ term ~ (term)* ~ "]" | "[" ~ "]" }
+
+alpha = _{ 'a'..'z' | 'A'..'Z' | "_" }
+alphanum = _{ alpha | '0'..'9' }
+
+ident = @{ alpha ~ alphanum* }
+keyword = @{ alpha ~ alphanum* ~ colon }
+
+colon = _{ ":" }
+
+string  = @{ "\"" ~ (escape | !("\"" | "\\") ~ any)* ~ "\"" }
+escape  = @{ "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t" | unicode) }
+unicode = @{ "u" ~ hex ~ hex ~ hex ~ hex }
+hex     = { '0'..'9' | 'a'..'f' | 'A'..'F' }
+
+number = @{ "-"? ~ int ~ ("." ~ '0'..'9'+ ~ exp? | exp)? }
+int    = @{ "0" | '1'..'9' ~ ('0'..'9' | "_")* }
+exp    = @{ ("E" | "e") ~ ("+" | "-")? ~ '0'..'9'+ }
+
+bool = { "true" | "false" }
+
+whitespace = _{ (" " | "\t" | "\r" | "\n") }
