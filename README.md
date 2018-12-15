@@ -1,4 +1,4 @@
-# Rainbow
+# Rainbow 🌈
 
 Rainbow is a small, safe, language intended for embedding in larger programs.
 
