@@ -12,14 +12,14 @@ use rainbow_core;
 
 pub struct REPL {
     ns: SharedNamespace<Value>,
-    values: RefCell<HashMap<String, Value>>,
+    env: RefCell<HashMap<String, (Value, Type)>>,
 }
 
 impl REPL {
     pub fn new() -> REPL {
         REPL {
             ns: Namespace::new_with_prelude().unwrap().into_shared(),
-            values: RefCell::new(HashMap::new()),
+            env: RefCell::new(HashMap::new()),
         }
     }
 
@@ -33,15 +33,15 @@ impl REPL {
         Script::compile(self.ns.clone(), input)
             .map_err(|err| format!("{}", err))
             .and_then(|script| {
-                let values = &*self.values.borrow();
+                let env = &*self.env.borrow();
                 script
-                    .eval(values.clone())
+                    .eval(env.clone().into_iter().map(|(k, (v, t))| (k, v)).collect())
                     .map(|v| (v, script.typer_result.output))
             })
     }
 
     pub fn set(&self, name: &str, val: Value, ty: Type) {
-        self.values.borrow_mut().insert(String::from(name), val);
+        self.env.borrow_mut().insert(String::from(name), (val, ty));
     }
 }
 
@@ -105,7 +105,7 @@ fn main() {
                     println!("{} ~ {}", rest, result.output);
                     let mut printed_globals_header = false;
                     for (ref name, ref ty) in result.inputs {
-                        if repl.values.borrow().get(name).is_some() {
+                        if repl.env.borrow().contains_key(name) {
                             continue;
                         }
                         if !printed_globals_header {
@@ -121,8 +121,8 @@ fn main() {
                 None => println!("`{}` is not defined", rest),
                 Some(sig) => println!("{}", sig),
             },
-            ":vars" => for (name, val) in repl.as_ref().values.borrow().iter() {
-                println!("{} = {} :: {}", name, val, "TODO");
+            ":vars" => for (name, (val, ty)) in repl.as_ref().env.borrow().iter() {
+                println!("{} = {} :: {}", name, val, ty);
             },
             ":set" => match rest.trim().find(|ch: char| ch.is_whitespace()) {
                 None => {
